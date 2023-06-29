@@ -1,8 +1,14 @@
+import { AppContextProvider } from './context/app-context'
+import { BrowserRouter } from 'react-router-dom'
+import AllRoutes from './routes'
+
 function App() {
   return (
-    <div className='App'>
-      <h1>首頁</h1>
-    </div>
+    <BrowserRouter>
+      <AppContextProvider>
+        <AllRoutes />
+      </AppContextProvider>
+    </BrowserRouter>
   )
 }
 
