@@ -1,11 +1,22 @@
+import { BrowserRouter, NavLink } from 'react-router-dom'
 import { AppContextProvider } from './context/app-context'
-import { BrowserRouter } from 'react-router-dom'
 import AllRoutes from './routes'
 
 function App() {
   return (
     <BrowserRouter>
       <AppContextProvider>
+        <div>React OSM Demo</div>
+        <nav className='nav'>
+          <ul className='nav-list'>
+            <li>
+              <NavLink to='/'>Home</NavLink>
+            </li>
+            <li>
+              <NavLink to='/Demo'>Demo</NavLink>
+            </li>
+          </ul>
+        </nav>
         <AllRoutes />
       </AppContextProvider>
     </BrowserRouter>

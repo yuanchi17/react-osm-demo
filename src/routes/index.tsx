@@ -1,8 +1,9 @@
-import { useRoutes, Navigate } from 'react-router-dom'
+import { Navigate, useRoutes } from 'react-router-dom'
 
-import Home from '@/page/Home'
 import Layout from '@/layouts'
 import NotFound from '@/page/404'
+import Demo from '@/page/Demo'
+import Home from '@/page/Home'
 
 const AllRoutes = () => {
   return useRoutes([
@@ -11,7 +12,7 @@ const AllRoutes = () => {
       element: <Layout />,
       children: [
         { path: '/', element: <Home /> },
-        // { path: '/example', element: <Example /> },
+        { path: '/Demo', element: <Demo /> },
       ],
     },
     {
