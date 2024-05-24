@@ -4,18 +4,31 @@ import { useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from 'react-leaflet'
 
 interface DataTs {
-  name: string
   lat: number
+  level: number
   lng: number
-  level: number // NOTE: level: red: 10 up / orange: 5 ~ 10 / green: 0 ~ 5
+  name: string
 }
 
-// TODO: 點擊的圖釘需更換顏色
+interface MarkerDatasTs extends DataTs {
+  showIcon: L.Icon
+}
 
 export default function Demo() {
+  const [selectIconIndex, setSelectIconIndex] = useState<number | null>(null)
   const [position, setPosition] = useState<LatLngExpression>([25.02605, 121.5436]) // 台北某地標
   const zoom = 15
 
+  const [redIcon, orangeIcon, greenIcon, selectIcon] = ['5TQO0Ej', '0rJ51Jl', 'wwtTxes', 'qnKlRfl'].map(imgur =>
+    L.icon({
+      iconUrl: `https://i.imgur.com/${imgur}.png`,
+      iconAnchor: [13, 37],
+      iconSize: [26, 40],
+      popupAnchor: [0, -39],
+    })
+  )
+
+  // API 取得
   const datas: DataTs[] = [
     {
       name: '捷運科技大樓站',
@@ -115,14 +128,13 @@ export default function Demo() {
     },
   ]
 
-  const [redIcon, orangeIcon, greenIcon] = ['5TQO0Ej', '0rJ51Jl', 'wwtTxes'].map(imgur =>
-    L.icon({
-      iconUrl: `https://i.imgur.com/${imgur}.png`,
-      iconAnchor: [13, 37],
-      iconSize: [26, 40],
-      popupAnchor: [0, -39],
-    })
-  )
+  const markerDatas: MarkerDatasTs[] = datas.map(data => {
+    let showIcon = greenIcon
+    if (data.level > 10) showIcon = redIcon
+    else if (data.level > 5) showIcon = orangeIcon
+
+    return { ...data, showIcon }
+  })
 
   const LocationMarker = () => {
     const map = useMapEvents({
@@ -137,18 +149,24 @@ export default function Demo() {
 
     return (
       <Marker position={position}>
-        <Popup>You are here.</Popup>
+        <Popup>location marker</Popup>
       </Marker>
     )
   }
 
-  const MarkerLevel = (data: DataTs, index: number) => {
-    let showIcon = greenIcon
-    if (data.level > 10) showIcon = redIcon
-    else if (data.level > 5) showIcon = orangeIcon
-
+  const MarkerLevel = (data: MarkerDatasTs, index: number) => {
+    const isSelect = selectIconIndex === index
     return (
-      <Marker position={[data.lat, data.lng]} icon={showIcon} key={index}>
+      <Marker
+        position={[data.lat, data.lng]}
+        icon={isSelect ? selectIcon : data.showIcon}
+        key={index}
+        eventHandlers={{
+          click: () => {
+            setSelectIconIndex(isSelect ? null : index)
+          },
+        }}
+      >
         <Popup>
           {data.name} / level: {data.level}
         </Popup>
@@ -179,7 +197,7 @@ export default function Demo() {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url='https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png'
           />
-          {datas.map((data, index) => MarkerLevel(data, index))}
+          {markerDatas.map((data, index) => MarkerLevel(data, index))}
           <LocationMarker />
         </MapContainer>
       </div>
