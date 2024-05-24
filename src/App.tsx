@@ -2,6 +2,8 @@ import { BrowserRouter, NavLink } from 'react-router-dom'
 import { AppContextProvider } from './context/app-context'
 import AllRoutes from './routes'
 
+import '@/assets/css/f2e-style.css'
+
 function App() {
   return (
     <BrowserRouter>

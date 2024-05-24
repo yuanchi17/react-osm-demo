@@ -1,0 +1,15 @@
+.icon-intro-area {
+  display: flex;
+  margin-bottom: 5px;
+}
+
+.icon-image-area {
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+}
+
+.icon-image {
+  height: 30px;
+  margin-right: 10px;
+}
