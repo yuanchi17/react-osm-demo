@@ -1,5 +1,7 @@
+import { Box, Typography } from '@mui/material'
 import L, { LatLngExpression } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import _ from 'lodash'
 import { useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from 'react-leaflet'
 
@@ -14,12 +16,19 @@ interface MarkerDatasTs extends DataTs {
   showIcon: L.Icon
 }
 
+const ICON_IMGUR_MAP = {
+  red: '5TQO0Ej',
+  orange: '0rJ51Jl',
+  green: 'wwtTxes',
+  select: 'qnKlRfl',
+}
+
 export default function Demo() {
   const [selectIconIndex, setSelectIconIndex] = useState<number | null>(null)
   const [position, setPosition] = useState<LatLngExpression>([25.02605, 121.5436]) // 台北某地標
   const zoom = 15
 
-  const [redIcon, orangeIcon, greenIcon, selectIcon] = ['5TQO0Ej', '0rJ51Jl', 'wwtTxes', 'qnKlRfl'].map(imgur =>
+  const [redIcon, orangeIcon, greenIcon, selectIcon] = _.map(ICON_IMGUR_MAP, imgur =>
     L.icon({
       iconUrl: `https://i.imgur.com/${imgur}.png`,
       iconAnchor: [13, 37],
@@ -175,23 +184,37 @@ export default function Demo() {
   }
 
   return (
-    <>
-      <p>Demo Page</p>
-      <div className='icon-intro-area'>
-        <div className='icon-image-area'>
-          <img className='icon-image' src='https://i.imgur.com/5TQO0Ej.png' />
-          <span>10 up</span>
+    <Box
+      display={'flex'}
+      flexDirection={'column'}
+      margin={'auto'}
+      overflow={'hidden'}
+      sx={{ height: '70vh', width: '50vw', border: 'solid 1px lightgray', borderRadius: '5px' }}
+    >
+      <Box display={'flex'} flexDirection={'column'} padding={'0px 15px'}>
+        <Typography variant='h6' marginY={'15px'}>
+          Demo Page
+        </Typography>
+        <div className='icon-intro-area'>
+          <div className='icon-image-area'>
+            <img className='icon-image' src={`https://i.imgur.com/${ICON_IMGUR_MAP.red}.png`} />
+            <Typography variant='caption'>10 up</Typography>
+          </div>
+          <div className='icon-image-area'>
+            <img className='icon-image' src={`https://i.imgur.com/${ICON_IMGUR_MAP.orange}.png`} />
+            <Typography variant='caption'>5 ~ 10</Typography>
+          </div>
+          <div className='icon-image-area'>
+            <img className='icon-image' src={`https://i.imgur.com/${ICON_IMGUR_MAP.green}.png`} />
+            <Typography variant='caption'>0 ~ 5</Typography>
+          </div>
+          <div className='icon-image-area'>
+            <img className='icon-image' src={`https://i.imgur.com/${ICON_IMGUR_MAP.select}.png`} />
+            <Typography variant='caption'>目前選取</Typography>
+          </div>
         </div>
-        <div className='icon-image-area'>
-          <img className='icon-image' src='https://i.imgur.com/0rJ51Jl.png' />
-          <span>5 ~ 10</span>
-        </div>
-        <div className='icon-image-area'>
-          <img className='icon-image' src='https://i.imgur.com/wwtTxes.png' />
-          <span>0 ~ 5</span>
-        </div>
-      </div>
-      <div id='map' style={{ height: '50vh', width: '80vw' }}>
+      </Box>
+      <div id='map' style={{ height: '80%', width: '100%' }}>
         <MapContainer center={position} zoom={zoom} style={{ height: '100%', minHeight: '100%' }}>
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -201,6 +224,6 @@ export default function Demo() {
           <LocationMarker />
         </MapContainer>
       </div>
-    </>
+    </Box>
   )
 }
