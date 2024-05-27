@@ -184,13 +184,7 @@ export default function Demo() {
   }
 
   return (
-    <Box
-      display={'flex'}
-      flexDirection={'column'}
-      margin={'auto'}
-      overflow={'hidden'}
-      sx={{ height: '70vh', width: '50vw', border: 'solid 1px lightgray', borderRadius: '5px' }}
-    >
+    <>
       <Box display={'flex'} flexDirection={'column'} padding={'0px 15px'}>
         <Typography variant='h6' marginY={'15px'}>
           Demo Page
@@ -214,7 +208,8 @@ export default function Demo() {
           </div>
         </div>
       </Box>
-      <div id='map' style={{ height: '80%', width: '100%' }}>
+
+      <div id='map' style={{ height: '50%', width: '100%' }}>
         <MapContainer center={position} zoom={zoom} style={{ height: '100%', minHeight: '100%' }}>
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -224,6 +219,6 @@ export default function Demo() {
           <LocationMarker />
         </MapContainer>
       </div>
-    </Box>
+    </>
   )
 }

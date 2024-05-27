@@ -1,3 +1,8 @@
+html,
+body {
+  margin: 0px;
+}
+
 .icon-intro-area {
   display: flex;
   margin-bottom: 5px;
