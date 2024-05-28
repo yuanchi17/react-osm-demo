@@ -23,6 +23,25 @@ const ICON_IMGUR_MAP = {
   select: 'qnKlRfl',
 }
 
+const ItemCountBox = ({ count = '', title = '' }: { count: number | string; title: string }) => {
+  return (
+    <Box
+      display={'flex'}
+      flexDirection={'column'}
+      alignItems={'center'}
+      marginLeft={'5px'}
+      sx={{ width: '30px', height: '100%' }}
+    >
+      <Typography variant='h6' color={'purple'}>
+        {count}
+      </Typography>
+      <Typography variant='caption' color={'gray'} marginTop={'auto'}>
+        {title}
+      </Typography>
+    </Box>
+  )
+}
+
 export default function Demo() {
   const [selectIconIndex, setSelectIconIndex] = useState<number | null>(null)
   const [position, setPosition] = useState<LatLngExpression>([25.02605, 121.5436]) // 台北某地標
@@ -184,7 +203,7 @@ export default function Demo() {
   }
 
   return (
-    <>
+    <Box display={'flex'} flexDirection={'column'} flex={'auto'}>
       <Box display={'flex'} flexDirection={'column'} padding={'0px 15px'}>
         <Typography variant='h6' marginY={'15px'}>
           Demo Page
@@ -209,16 +228,86 @@ export default function Demo() {
         </div>
       </Box>
 
-      <div id='map' style={{ height: '50%', width: '100%' }}>
-        <MapContainer center={position} zoom={zoom} style={{ height: '100%', minHeight: '100%' }}>
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url='https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png'
-          />
-          {markerDatas.map((data, index) => MarkerLevel(data, index))}
-          <LocationMarker />
-        </MapContainer>
-      </div>
-    </>
+      <Box
+        display={'flex'}
+        flexDirection={'column'}
+        margin={'auto 15px'}
+        sx={{
+          zIndex: 999,
+          backgroundColor: 'white',
+          position: 'absolute',
+          bottom: '100px',
+          width: '-webkit-fill-available',
+          borderTop: 'solid 4px mediumpurple',
+        }}
+      >
+        <Box
+          sx={{
+            borderRadius: '10px 10px 0px 0px',
+            position: 'absolute',
+            top: '-35px',
+            left: '20px',
+            width: '60px',
+            height: '35px',
+            background: 'linear-gradient(180deg, purple, mediumpurple)',
+            color: 'white',
+            textAlign: 'center',
+            alignContent: 'center',
+          }}
+        >
+          <Typography variant='h6'>17</Typography>
+        </Box>
+        <Box display={'flex'} padding={'10px'} justifyContent={'space-between'}>
+          <Box display={'flex'} flexDirection={'column'} alignItems={'start'} justifyContent={'center'}>
+            <Typography variant='subtitle2'>000000000</Typography>
+            <Typography variant='subtitle2' color={'gray'}>
+              XXXXXXX
+            </Typography>
+          </Box>
+
+          <Box display={'flex'} alignItems={'start'}>
+            {[
+              { count: 4, title: '文案' },
+              { count: '', title: '文案' },
+              { count: 17, title: '文案' },
+              { count: '', title: '文案' },
+              { count: 5, title: '文案' },
+              { count: 3, title: '文案' },
+            ].map(item => (
+              <ItemCountBox count={item.count} title={item.title} />
+            ))}
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            borderRadius: '5px',
+            position: 'absolute',
+            top: '-15px',
+            right: '20px',
+            width: '90px',
+            height: '25px',
+            backgroundColor: 'purple',
+            color: 'white',
+            textAlign: 'center',
+            alignContent: 'center',
+          }}
+        >
+          <Typography variant='subtitle2'>{`查看更多 >`}</Typography>
+        </Box>
+      </Box>
+
+      <Box display={'flex'} flexDirection={'column'} flex={'auto'}>
+        <div id='map' style={{ height: '100%', width: '100%' }}>
+          <MapContainer center={position} zoom={zoom} style={{ height: '100%', minHeight: '100%' }}>
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url='https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png'
+            />
+            {markerDatas.map((data, index) => MarkerLevel(data, index))}
+            <LocationMarker />
+          </MapContainer>
+        </div>
+      </Box>
+    </Box>
   )
 }

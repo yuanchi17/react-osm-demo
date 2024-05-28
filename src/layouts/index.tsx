@@ -1,8 +1,7 @@
+import Footer from '@/component/Footer'
 import Header from '@/component/Header'
 import { Box, Toolbar } from '@mui/material'
 import { Outlet } from 'react-router-dom'
-
-// import Footer from '@/component/Footer'
 
 export default function Layout() {
   return (
@@ -10,7 +9,7 @@ export default function Layout() {
       <Header />
       <Toolbar />
       <Outlet />
-      {/* <Footer /> */}
+      <Footer />
     </Box>
   )
 }

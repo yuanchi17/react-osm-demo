@@ -6,6 +6,7 @@ body {
 .icon-intro-area {
   display: flex;
   margin-bottom: 5px;
+  place-content: space-between;
 }
 
 .icon-image-area {
