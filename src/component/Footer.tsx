@@ -1,3 +1,4 @@
+import COLOR from '@/utils/theme-color'
 import { Box, IconButton } from '@mui/material'
 
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
@@ -8,22 +9,28 @@ import SettingsIcon from '@mui/icons-material/Settings'
 export default function Footer() {
   return (
     <Box
-      sx={{ backgroundColor: 'lightgray', position: 'fixed', bottom: 0, width: '-webkit-fill-available', zIndex: 9999 }}
+      sx={{
+        backgroundColor: COLOR.disabled.light,
+        position: 'fixed',
+        bottom: 0,
+        width: '-webkit-fill-available',
+        zIndex: 9999,
+      }}
       padding={'10px'}
     >
       <Box display={'flex'} justifyContent={'space-between'} sx={{ borderRadius: '50px', backgroundColor: 'white' }}>
-        <IconButton aria-label='home' color='primary' sx={{ margin: 'auto' }}>
-          <HomeIcon fontSize='large' color='disabled' />
+        <IconButton aria-label='home' sx={{ margin: 'auto' }}>
+          <HomeIcon fontSize='large' sx={{ color: COLOR.primary.light }} />
         </IconButton>
 
-        <IconButton aria-label='search' color='primary' sx={{ margin: 'auto' }}>
-          <SearchIcon fontSize='large' color='disabled' />
+        <IconButton aria-label='search' sx={{ margin: 'auto' }}>
+          <SearchIcon fontSize='large' sx={{ color: COLOR.primary.light }} />
         </IconButton>
-        <IconButton aria-label='favorite-border' color='primary' sx={{ margin: 'auto' }}>
-          <FavoriteBorderIcon fontSize='large' color='disabled' />
+        <IconButton aria-label='favorite-border' sx={{ margin: 'auto' }}>
+          <FavoriteBorderIcon fontSize='large' sx={{ color: COLOR.primary.light }} />
         </IconButton>
-        <IconButton aria-label='settings' color='primary' sx={{ margin: 'auto' }}>
-          <SettingsIcon fontSize='large' color='disabled' />
+        <IconButton aria-label='settings' sx={{ margin: 'auto' }}>
+          <SettingsIcon fontSize='large' sx={{ color: COLOR.primary.light }} />
         </IconButton>
       </Box>
     </Box>

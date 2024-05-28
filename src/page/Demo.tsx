@@ -1,3 +1,4 @@
+import COLOR from '@/utils/theme-color'
 import { Box, Typography } from '@mui/material'
 import L, { LatLngExpression } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -32,7 +33,7 @@ const ItemCountBox = ({ count = '', title = '' }: { count: number | string; titl
       marginLeft={'5px'}
       sx={{ width: '30px', height: '100%' }}
     >
-      <Typography variant='h6' color={'purple'}>
+      <Typography variant='h6' color={'primary'}>
         {count}
       </Typography>
       <Typography variant='caption' color={'gray'} marginTop={'auto'}>
@@ -238,7 +239,7 @@ export default function Demo() {
           position: 'absolute',
           bottom: '100px',
           width: '-webkit-fill-available',
-          borderTop: 'solid 4px mediumpurple',
+          borderTop: `solid 4px ${COLOR.primary.light}`,
         }}
       >
         <Box
@@ -249,7 +250,7 @@ export default function Demo() {
             left: '20px',
             width: '60px',
             height: '35px',
-            background: 'linear-gradient(180deg, purple, mediumpurple)',
+            background: `linear-gradient(180deg, ${COLOR.primary.dark}, ${COLOR.primary.light})`,
             color: 'white',
             textAlign: 'center',
             alignContent: 'center',
@@ -286,7 +287,7 @@ export default function Demo() {
             right: '20px',
             width: '90px',
             height: '25px',
-            backgroundColor: 'purple',
+            backgroundColor: COLOR.primary.main,
             color: 'white',
             textAlign: 'center',
             alignContent: 'center',
