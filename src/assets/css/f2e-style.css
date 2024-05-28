@@ -3,12 +3,6 @@ body {
   margin: 0px;
 }
 
-.icon-intro-area {
-  display: flex;
-  margin-bottom: 5px;
-  place-content: space-between;
-}
-
 .icon-image-area {
   display: flex;
   align-items: center;

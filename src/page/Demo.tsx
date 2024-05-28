@@ -26,6 +26,7 @@ interface SelectItemTs extends ApiDataTs {
 }
 
 const ICON_IMGUR_MAP = {
+  omg: 'GVhKcMV',
   red: '5TQO0Ej',
   orange: '0rJ51Jl',
   green: 'wwtTxes',
@@ -57,7 +58,7 @@ export default function Demo() {
   const [position, setPosition] = useState<LatLngExpression>([25.02605, 121.5436]) // 台北某地標
   const zoom = 15
 
-  const [redIcon, orangeIcon, greenIcon, selectIcon] = _.map(ICON_IMGUR_MAP, imgur =>
+  const [omgIcon, redIcon, orangeIcon, greenIcon, selectIcon] = _.map(ICON_IMGUR_MAP, imgur =>
     L.icon({
       iconUrl: `https://i.imgur.com/${imgur}.png`,
       iconAnchor: [13, 37],
@@ -72,8 +73,9 @@ export default function Demo() {
   const markerDatas: SelectItemTs[] = apiDatas.map(data => {
     const totalCount = data?.hand + data?.auto + data?.one + data?.two + data?.fault + data?.project
     let showIcon = greenIcon
-    if (totalCount > 50) showIcon = redIcon
-    else if (totalCount > 25) showIcon = orangeIcon
+    if (totalCount > 50) showIcon = omgIcon
+    else if (totalCount > 30) showIcon = redIcon
+    else if (totalCount > 20) showIcon = orangeIcon
 
     return { ...data, showIcon, totalCount }
   })
@@ -122,24 +124,35 @@ export default function Demo() {
         <Typography variant='h6' marginY={'15px'}>
           Demo Page
         </Typography>
-        <div className='icon-intro-area'>
+        <Box
+          display={'flex'}
+          marginBottom={'5px'}
+          marginX={'10px'}
+          sx={{
+            placeContent: 'space-between',
+          }}
+        >
+          <div className='icon-image-area'>
+            <img className='icon-image' src={`https://i.imgur.com/${ICON_IMGUR_MAP.omg}.png`} />
+            <Typography variant='caption'>GG得思</Typography>
+          </div>
           <div className='icon-image-area'>
             <img className='icon-image' src={`https://i.imgur.com/${ICON_IMGUR_MAP.red}.png`} />
-            <Typography variant='caption'>10 up</Typography>
+            <Typography variant='caption'>要爆啦</Typography>
           </div>
           <div className='icon-image-area'>
             <img className='icon-image' src={`https://i.imgur.com/${ICON_IMGUR_MAP.orange}.png`} />
-            <Typography variant='caption'>5 ~ 10</Typography>
+            <Typography variant='caption'>普普</Typography>
           </div>
           <div className='icon-image-area'>
             <img className='icon-image' src={`https://i.imgur.com/${ICON_IMGUR_MAP.green}.png`} />
-            <Typography variant='caption'>0 ~ 5</Typography>
+            <Typography variant='caption'>一般般</Typography>
           </div>
           <div className='icon-image-area'>
             <img className='icon-image' src={`https://i.imgur.com/${ICON_IMGUR_MAP.select}.png`} />
             <Typography variant='caption'>目前選取</Typography>
           </div>
-        </div>
+        </Box>
       </Box>
 
       {selectItem ? (
