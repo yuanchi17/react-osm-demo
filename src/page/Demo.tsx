@@ -1,19 +1,27 @@
+import { DATAS_FORK } from '@/utils/constant'
 import COLOR from '@/utils/theme-color'
 import { Box, Typography } from '@mui/material'
 import L, { LatLngExpression } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import _ from 'lodash'
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from 'react-leaflet'
 
-interface DataTs {
+interface ApiDataTs {
   lat: number
-  level: number
   lng: number
   name: string
+  sid: string
+  hand: number
+  auto: number
+  one: number
+  two: number
+  fault: number
+  project: number
 }
 
-interface MarkerDatasTs extends DataTs {
+interface SelectItemTs extends ApiDataTs {
+  totalCount: number
   showIcon: L.Icon
 }
 
@@ -44,6 +52,7 @@ const ItemCountBox = ({ count = '', title = '' }: { count: number | string; titl
 }
 
 export default function Demo() {
+  const [apiDatas, setApiDatas] = useState<ApiDataTs[]>([])
   const [selectIconIndex, setSelectIconIndex] = useState<number | null>(null)
   const [position, setPosition] = useState<LatLngExpression>([25.02605, 121.5436]) // 台北某地標
   const zoom = 15
@@ -57,113 +66,21 @@ export default function Demo() {
     })
   )
 
-  // API 取得
-  const datas: DataTs[] = [
-    {
-      name: '捷運科技大樓站',
-      lat: 25.02605,
-      lng: 121.5436,
-      level: 10,
-    },
-    {
-      name: '復興南路二段273號前',
-      lat: 25.02565,
-      lng: 121.54357,
-      level: 10,
-    },
-    {
-      name: '國北教大實小東側門',
-      lat: 25.02429,
-      lng: 121.54124,
-      level: 10,
-    },
-    {
-      name: '和平公園東側',
-      lat: 25.02351,
-      lng: 121.54282,
-      level: 5,
-    },
-    {
-      name: '辛亥復興路口西北側',
-      lat: 25.02153,
-      lng: 121.54299,
-      level: 8,
-    },
-    {
-      name: '復興南路二段280號前',
-      lat: 25.02429,
-      lng: 121.54328,
-      level: 0,
-    },
-    {
-      name: '復興南路二段340巷口',
-      lat: 25.02253,
-      lng: 121.54326,
-      level: 3,
-    },
-    {
-      name: '新生南路三段52號前',
-      lat: 25.02112,
-      lng: 121.53407,
-      level: 5,
-    },
-    {
-      name: '新生南路三段66號前',
-      lat: 25.01976,
-      lng: 121.53384,
-      level: 8,
-    },
-    {
-      name: '新生南路三段82號前',
-      lat: 25.01894,
-      lng: 121.53361,
-      level: 0,
-    },
-    {
-      name: '辛亥路一段30號前',
-      lat: 25.01986,
-      lng: 121.52982,
-      level: 15,
-    },
-    {
-      name: '和平復興路口西北側',
-      lat: 25.02543,
-      lng: 121.54332,
-      level: 2,
-    },
-    {
-      name: '羅斯福路三段311號前',
-      lat: 25.01717,
-      lng: 121.53202,
-      level: 5,
-    },
-    {
-      name: '大安運動中心停車場',
-      lat: 25.020348,
-      lng: 121.546446,
-      level: 5,
-    },
-    {
-      name: '羅斯福路三段245號前',
-      lat: 25.01927,
-      lng: 121.52989,
-      level: 15,
-    },
-    {
-      name: '溫州公園',
-      lat: 25.01895,
-      lng: 121.53156,
-      level: 0,
-    },
-  ]
-
-  const markerDatas: MarkerDatasTs[] = datas.map(data => {
+  useEffect(() => {
+    setApiDatas(DATAS_FORK)
+  }, [])
+  const markerDatas: SelectItemTs[] = apiDatas.map(data => {
+    const totalCount = data?.hand + data?.auto + data?.one + data?.two + data?.fault + data?.project
     let showIcon = greenIcon
-    if (data.level > 10) showIcon = redIcon
-    else if (data.level > 5) showIcon = orangeIcon
+    if (totalCount > 50) showIcon = redIcon
+    else if (totalCount > 25) showIcon = orangeIcon
 
-    return { ...data, showIcon }
+    return { ...data, showIcon, totalCount }
   })
+
+  const selectItem = useMemo<SelectItemTs>(() => {
+    return selectIconIndex ? markerDatas[selectIconIndex] : null
+  }, [selectIconIndex])
 
   const LocationMarker = () => {
     const map = useMapEvents({
@@ -183,7 +100,7 @@ export default function Demo() {
     )
   }
 
-  const MarkerLevel = (data: MarkerDatasTs, index: number) => {
+  const MarkerLevel = (data: SelectItemTs, index: number) => {
     const isSelect = selectIconIndex === index
     return (
       <Marker
@@ -195,11 +112,7 @@ export default function Demo() {
             setSelectIconIndex(isSelect ? null : index)
           },
         }}
-      >
-        <Popup>
-          {data.name} / level: {data.level}
-        </Popup>
-      </Marker>
+      />
     )
   }
 
@@ -229,73 +142,73 @@ export default function Demo() {
         </div>
       </Box>
 
-      <Box
-        display={'flex'}
-        flexDirection={'column'}
-        margin={'auto 15px'}
-        sx={{
-          zIndex: 999,
-          backgroundColor: 'white',
-          position: 'absolute',
-          bottom: '100px',
-          width: '-webkit-fill-available',
-          borderTop: `solid 4px ${COLOR.primary.light}`,
-        }}
-      >
+      {selectItem ? (
         <Box
+          display={'flex'}
+          flexDirection={'column'}
+          margin={'auto 15px'}
           sx={{
-            borderRadius: '10px 10px 0px 0px',
+            zIndex: 999,
+            backgroundColor: 'white',
             position: 'absolute',
-            top: '-35px',
-            left: '20px',
-            width: '60px',
-            height: '35px',
-            background: `linear-gradient(180deg, ${COLOR.primary.dark}, ${COLOR.primary.light})`,
-            color: 'white',
-            textAlign: 'center',
-            alignContent: 'center',
+            bottom: '100px',
+            width: '-webkit-fill-available',
+            borderTop: `solid 4px ${COLOR.primary.light}`,
           }}
         >
-          <Typography variant='h6'>17</Typography>
-        </Box>
-        <Box display={'flex'} padding={'10px'} justifyContent={'space-between'}>
-          <Box display={'flex'} flexDirection={'column'} alignItems={'start'} justifyContent={'center'}>
-            <Typography variant='subtitle2'>000000000</Typography>
-            <Typography variant='subtitle2' color={'gray'}>
-              XXXXXXX
-            </Typography>
+          <Box
+            sx={{
+              borderRadius: '10px 10px 0px 0px',
+              position: 'absolute',
+              top: '-35px',
+              left: '20px',
+              width: '60px',
+              height: '35px',
+              background: `linear-gradient(180deg, ${COLOR.primary.dark}, ${COLOR.primary.light})`,
+              color: 'white',
+              textAlign: 'center',
+              alignContent: 'center',
+            }}
+          >
+            <Typography variant='h6'>{selectItem?.totalCount}</Typography>
           </Box>
+          <Box display={'flex'} padding={'10px'} justifyContent={'space-between'}>
+            <Box display={'flex'} flexDirection={'column'} alignItems={'start'} justifyContent={'center'}>
+              <Typography variant='subtitle2'>{selectItem?.sid}</Typography>
+              <Typography variant='subtitle2' color={'gray'}>
+                {selectItem?.name}
+              </Typography>
+            </Box>
 
-          <Box display={'flex'} alignItems={'start'}>
-            {[
-              { count: 4, title: '文案' },
-              { count: '', title: '文案' },
-              { count: 17, title: '文案' },
-              { count: '', title: '文案' },
-              { count: 5, title: '文案' },
-              { count: 3, title: '文案' },
-            ].map(item => (
-              <ItemCountBox count={item.count} title={item.title} />
-            ))}
+            <Box display={'flex'} alignItems={'start'}>
+              <ItemCountBox count={selectItem?.hand || ''} title='文案' />
+              <ItemCountBox count={selectItem?.auto || ''} title='文案' />
+              <ItemCountBox count={selectItem?.one || ''} title='文案' />
+              <ItemCountBox count={selectItem?.two || ''} title='文案' />
+              <ItemCountBox count={selectItem?.fault || ''} title='文案' />
+              <ItemCountBox count={selectItem?.project || ''} title='文案' />
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              borderRadius: '5px',
+              position: 'absolute',
+              top: '-15px',
+              right: '20px',
+              width: '90px',
+              height: '25px',
+              backgroundColor: COLOR.primary.main,
+              color: 'white',
+              textAlign: 'center',
+              alignContent: 'center',
+            }}
+          >
+            <Typography variant='subtitle2'>{`查看更多 >`}</Typography>
           </Box>
         </Box>
-        <Box
-          sx={{
-            borderRadius: '5px',
-            position: 'absolute',
-            top: '-15px',
-            right: '20px',
-            width: '90px',
-            height: '25px',
-            backgroundColor: COLOR.primary.main,
-            color: 'white',
-            textAlign: 'center',
-            alignContent: 'center',
-          }}
-        >
-          <Typography variant='subtitle2'>{`查看更多 >`}</Typography>
-        </Box>
-      </Box>
+      ) : (
+        <></>
+      )}
 
       <Box display={'flex'} flexDirection={'column'} flex={'auto'}>
         <div id='map' style={{ height: '100%', width: '100%' }}>
